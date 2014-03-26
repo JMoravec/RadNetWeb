@@ -73,7 +73,7 @@ WSGI_APPLICATION = 'RadNetWeb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.RadNet'),
+        'NAME': os.path.join(BASE_DIR,  'db.RadNet'),
     }
 }
 
@@ -91,7 +91,7 @@ USE_L10N = True
 USE_TZ = True
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, '/locale/'),
+    os.path.join(BASE_DIR + '/locale/'),
 )
 
 
@@ -100,11 +100,11 @@ LOCALE_PATHS = (
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '/static/'),
+    os.path.join(BASE_DIR + '/static/'),
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, '/templates/'),
+    os.path.join(BASE_DIR + '/templates/'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
