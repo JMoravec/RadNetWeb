@@ -1,0 +1,110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-22 16:52-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: templates/RadNet/base.html:13
+msgid "Radnet"
+msgstr "テスト"
+
+#: templates/RadNet/base.html:40
+msgid "RadNet Online Data"
+msgstr ""
+
+#: templates/RadNet/base.html:42
+msgid "Home"
+msgstr ""
+
+#: templates/RadNet/base.html:44
+msgid "Logout"
+msgstr ""
+
+#: templates/RadNet/base.html:46
+msgid "Login"
+msgstr ""
+
+#: templates/RadNet/base.html:48
+msgid "Contact"
+msgstr ""
+
+#: templates/RadNet/base.html:49
+msgid "About"
+msgstr ""
+
+#: templates/RadNet/base.html:57
+msgid ""
+"This project is the result of many hours of hard work of the RadNet team at "
+"the <a href=\"http://www.unk.edu\">University of Nebraska at Kearney</a>.\n"
+"                    Click <a href=\"#\">here</a> if you want to help out!"
+msgstr ""
+
+#: templates/RadNet/index.html:7
+msgid "RadNet"
+msgstr ""
+
+#: templates/RadNet/index.html:8
+msgid "Find how much radiation is in your air."
+msgstr "テスト2"
+
+#: templates/RadNet/index.html:10
+msgid "Learn more"
+msgstr ""
+
+#: templates/account/login.html:9
+msgid "Sign In"
+msgstr ""
+
+#: templates/account/login.html:22
+msgid "Sign in"
+msgstr ""
+
+#: templates/account/login.html:24
+msgid "Connect to RadNet with your favorite social network"
+msgstr ""
+
+#: templates/account/login.html:59
+msgid "Or sign in with your RadNet account"
+msgstr ""
+
+#: templates/account/login.html:69
+msgid "Dont have a RadNet or social network account?"
+msgstr ""
+
+#: templates/account/login.html:70 templates/account/signup.html:10
+#: templates/account/signup.html.py:20
+msgid "Sign Up"
+msgstr ""
+
+#: templates/account/logout.html:6 templates/account/logout.html.py:9
+#: templates/account/logout.html:18
+msgid "Sign Out"
+msgstr ""
+
+#: templates/account/logout.html:11
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+#: templates/account/signup.html:7
+msgid "Signup"
+msgstr ""
+
+#: templates/account/signup.html:12
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""

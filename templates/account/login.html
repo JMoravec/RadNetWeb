@@ -1,0 +1,75 @@
+{% extends "RadNet/base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load url from future %}
+{% load socialaccount %}
+
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block body_block %}
+{% include "socialaccount/snippets/login_extra.html" %}
+
+
+
+<!--<div class="container">-->
+
+      <script id="metamorph-1-start" type="text/x-placeholder"></script><script id="metamorph-21-start" type="text/x-placeholder"></script>
+
+	<!--<div class="container text-center"> -->
+	    <form class="form-signin" data-ember-action="2">
+	    	<h2 class="form-signin-heading">{% blocktrans %}Sign in{% endblocktrans %}</h2>
+
+			<small class="text-muted">{% blocktrans %}Connect to RadNet with your favorite social network{% endblocktrans %}</small>
+			<br /><br />
+
+
+            <p>
+
+
+                <a class="btn btn-primary social-login-btn social-facebook" href="{% provider_login_url "facebook" method="js_sdk"  %}"><i class="fa fa-facebook"></i></a>
+                <!--<a class="btn btn-primary social-login-btn social-twitter" href="{% provider_login_url "twitter" %}"><i class="fa fa-twitter"></i></a>-->
+                <!--<a class="btn btn-primary social-login-btn social-linkedin" href="/auth/linkedin"><i class="fa fa-linkedin"></i></a>-->
+                <a class="btn btn-primary social-login-btn social-google" href="{% provider_login_url "google" %}"><i class="fa fa-google-plus"></i></a>
+            </p>
+
+            <!--<div class="btn-group social-login-more">
+              <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">
+                More...
+              </button>
+              <ul class="dropdown-menu text-left " role="menu">
+                <li><a href="#"><i class="fa fa-tumblr-sign"></i>   Tumblr</a></li>
+                <li><a href="#"><i class="fa fa-github-alt"></i>   Github</a></li>
+                <li><a href="#"><i class="fa fa-dropbox"></i>   Dropbox</a></li>
+                <li><a href="/auth/amazon"><span class="zocial-amazon"></span>   Amazon</a></li>
+                <li><a href="#"><span class="zocial-bitbucket"></span>   Bitbucket</a></li>
+                <li><a href="#"><span class="zocial-evernote"></span>   Evernote</a></li>
+                <li><a href="#"><span class="zocial-meetup"></span>   Meetup</a></li>
+                <li><a href="#"><i class="fa fa-windows"></i>   Windows Live</a></li>
+                <li><a href="#"><i class="fa fa-weibo"></i>   Weibo</a></li>
+                <li><a href="#"><i class="fa fa-foursquare"></i>   Foursquare</a></li>
+                <li><a href="#"><i class="fa fa-stackexchange"></i>   Stack Exchange</a></li>
+                <li><a href="#"><i class="fa fa-trello"></i>   Trello</a></li>
+                <li><a href="#"><span class="zocial-wordpress"></span>   Wordpress</a></li>
+              </ul>
+            </div> -->
+
+
+		    <small class="text-muted">{% blocktrans %}Or sign in with your RadNet account{% endblocktrans %}</small>
+		    <br><br>
+
+	        <input id="ember360" class="ember-view ember-text-field form-control login-input" placeholder="Email Address" type="text">
+	        <input id="ember361" class="ember-view ember-text-field form-control login-input-pass" placeholder="Password" type="password">
+
+	        <script id="metamorph-22-start" type="text/x-placeholder"></script><script id="metamorph-22-end" type="text/x-placeholder"></script>
+
+	        <button class="btn btn-lg btn-primary btn-block btn-center" type="submit" data-bindattr-3="3">Sign in</button>
+	        <br>
+	        <small class="create-account text-muted">{% blocktrans %}Dont have a RadNet or social network account?{% endblocktrans %}<br />
+                <button id="ember363" class="ember-view btn btn-sm btn-default">{% blocktrans %}Sign Up{% endblocktrans %}</button> </small>
+	    </form>
+    <!--</div>-->
+<!--</div>-->
+
+{% endblock %}
