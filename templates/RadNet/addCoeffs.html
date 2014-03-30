@@ -1,0 +1,22 @@
+{% extends "RadNet/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% block title %}{% trans "Add Coefficient Numbers" %}{% endblock %}
+
+{% block body_block %}
+    <form action="/Data/AddCoefficients/1/" method="post"> {%csrf_token %}
+    {% bootstrap_form alphaForm %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary"> {% trans 'Submit' %} </button>
+    {% endbuttons %}
+    </form>
+<br /><br />
+    <form action="/Data/AddCoefficients/2/" method="post"> {%csrf_token %}
+    {% bootstrap_form betaForm %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary"> {% trans 'Submit' %} </button>
+    {% endbuttons %}
+    </form>
+<br /><br />
+    <a class="btn btn-lg btn-default" href="/Data/AddFilter">{% trans "Add Filter" %}</a>
+{% endblock %}

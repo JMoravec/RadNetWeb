@@ -18,56 +18,48 @@
       <script id="metamorph-1-start" type="text/x-placeholder"></script><script id="metamorph-21-start" type="text/x-placeholder"></script>
 
 	<!--<div class="container text-center"> -->
-	    <form class="form-signin" data-ember-action="2">
+	    <form method="post" action="{% url 'account_login' %}" class="form-signin" data-ember-action="2">
+        {% csrf_token %}
 	    	<h2 class="form-signin-heading">{% blocktrans %}Sign in{% endblocktrans %}</h2>
 
 			<small class="text-muted">{% blocktrans %}Connect to RadNet with your favorite social network{% endblocktrans %}</small>
 			<br /><br />
-
-
             <p>
-
-
                 <a class="btn btn-primary social-login-btn social-facebook" href="{% provider_login_url "facebook" method="js_sdk"  %}"><i class="fa fa-facebook"></i></a>
                 <!--<a class="btn btn-primary social-login-btn social-twitter" href="{% provider_login_url "twitter" %}"><i class="fa fa-twitter"></i></a>-->
                 <!--<a class="btn btn-primary social-login-btn social-linkedin" href="/auth/linkedin"><i class="fa fa-linkedin"></i></a>-->
                 <a class="btn btn-primary social-login-btn social-google" href="{% provider_login_url "google" %}"><i class="fa fa-google-plus"></i></a>
             </p>
 
-            <!--<div class="btn-group social-login-more">
-              <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">
-                More...
-              </button>
-              <ul class="dropdown-menu text-left " role="menu">
-                <li><a href="#"><i class="fa fa-tumblr-sign"></i>   Tumblr</a></li>
-                <li><a href="#"><i class="fa fa-github-alt"></i>   Github</a></li>
-                <li><a href="#"><i class="fa fa-dropbox"></i>   Dropbox</a></li>
-                <li><a href="/auth/amazon"><span class="zocial-amazon"></span>   Amazon</a></li>
-                <li><a href="#"><span class="zocial-bitbucket"></span>   Bitbucket</a></li>
-                <li><a href="#"><span class="zocial-evernote"></span>   Evernote</a></li>
-                <li><a href="#"><span class="zocial-meetup"></span>   Meetup</a></li>
-                <li><a href="#"><i class="fa fa-windows"></i>   Windows Live</a></li>
-                <li><a href="#"><i class="fa fa-weibo"></i>   Weibo</a></li>
-                <li><a href="#"><i class="fa fa-foursquare"></i>   Foursquare</a></li>
-                <li><a href="#"><i class="fa fa-stackexchange"></i>   Stack Exchange</a></li>
-                <li><a href="#"><i class="fa fa-trello"></i>   Trello</a></li>
-                <li><a href="#"><span class="zocial-wordpress"></span>   Wordpress</a></li>
-              </ul>
-            </div> -->
-
-
 		    <small class="text-muted">{% blocktrans %}Or sign in with your RadNet account{% endblocktrans %}</small>
 		    <br><br>
 
-	        <input id="ember360" class="ember-view ember-text-field form-control login-input" placeholder="Email Address" type="text">
-	        <input id="ember361" class="ember-view ember-text-field form-control login-input-pass" placeholder="Password" type="password">
-
+            {% if form.errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-error">
+                    <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if form.errors %}
+                {% for error in form.login.errors %}
+                    <strong>{{ error|escape }}</strong>
+                {% endfor %}
+            {% endif %}
+	        <input id="id_login" name="login" class="ember-view ember-text-field form-control login-input" placeholder="{% trans "Username or Email" %}" type="text">
+	        <input id="id_password" name="password" class="ember-view ember-text-field form-control login-input-pass" placeholder="{% trans "Password" %}" type="password">
+            {% if form.errors %}
+                {% for error in form.password.errors %}
+                    <strong>{{ error|escape }}</strong>
+                {% endfor %}
+            {% endif %}
+            <br />
 	        <script id="metamorph-22-start" type="text/x-placeholder"></script><script id="metamorph-22-end" type="text/x-placeholder"></script>
 
 	        <button class="btn btn-lg btn-primary btn-block btn-center" type="submit" data-bindattr-3="3">Sign in</button>
 	        <br>
-	        <small class="create-account text-muted">{% blocktrans %}Dont have a RadNet or social network account?{% endblocktrans %}<br />
-                <button id="ember363" class="ember-view btn btn-sm btn-default">{% blocktrans %}Sign Up{% endblocktrans %}</button> </small>
+	        <small class="create-account text-muted">{% blocktrans %}Don't have a RadNet or social network account?{% endblocktrans %}<br />
+                <a href="/accounts/signup/" id="ember363" class="ember-view btn btn-sm btn-default">{% blocktrans %}Sign Up{% endblocktrans %}</a> </small>
 	    </form>
     <!--</div>-->
 <!--</div>-->

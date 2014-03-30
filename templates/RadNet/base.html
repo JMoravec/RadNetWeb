@@ -1,6 +1,12 @@
 {% load static %}
-{% load  tags %}
+{% load tags %}
 {% load i18n %}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,15 +16,29 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+
+    <script src="{% static 'jQueryUI/jquery-1.10.2.js' %}"></script>
+    <script src="{% static 'jQueryUI/ui/jquery-ui.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'jQueryUI/themes/base/jquery.ui.all.css' %}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+
+    <link rel="stylesheet" href="{% static 'jQueryUI/demos/demos.css' %}">
     <title>{% block title %}{% trans "Radnet" %}{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"> -->
 
+        {% bootstrap_css %}
+      {% bootstrap_javascript %}
+      {# Display django.contrib.messages as Bootstrap alerts #}
+      {% bootstrap_messages %}
     <!-- Custom styles for this template -->
     <link href="{% static 'css/cover.css' %}" rel="stylesheet">
     <link href="{% static 'css/login.css' %}" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+
+      {% block extra_head %}{% endblock %}
+
 
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -26,6 +46,14 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+  <!--
+  <style type="text/css">
+    body {
+      background-image: url({% static 'picts/RadNetCircle-MinionPro-Sm.png' %});
+      background-repeat: no-repeat;
+      background-position: center center;
+      }
+  </style> -->
   </head>
 
   <body>
@@ -41,12 +69,15 @@
               <ul class="nav masthead-nav">
                 <li class="{% active request "^/$" %}"><a href="/">{% trans "Home" %}</a></li>
                 {% if request.user.is_authenticated %}
-                <li><a href="/accounts/logout/">{% trans "Logout" %}</a></li>
+                <li><a class="{% active request "^accounts/logout/$" %}" href="/accounts/logout/">{% trans "Logout" %}</a></li>
                 {% else %}
                 <li class="{% active request "^/accounts/login/$" %}"><a href="/accounts/login/">{% trans "Login" %}</a></li>
                 {% endif %}
                 <li><a href="#">{% trans "Contact" %}</a></li>
                 <li><a href="#">{% trans "About" %}</a></li>
+                {% if request.user.is_authenticated %}
+                <li class="{% active request "^/Data/Add" %}"><a href="/Data/AddData/">{% trans "Add Data" %}</a></li>
+                {% endif %}
               </ul>
             </div>
           </div>

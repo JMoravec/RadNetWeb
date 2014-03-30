@@ -1,0 +1,9 @@
+{% extends "RadNet/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Add Data" %}{% endblock %}
+
+{% block body_block %}
+	<a class="btn btn-lg btn-default" href="/Data/AddFilter">{% trans "Add Filter" %}</a>
+	<a class="btn btn-lg btn-default" href="/Data/AddRawData">{% trans "Add Raw Data" %}</a><br /><br />
+    <a class="btn btn-lg btn-default" href="/Data/AddCoefficients">{% trans "Add New Coefficient Numbers" %}</a>
+{% endblock %}

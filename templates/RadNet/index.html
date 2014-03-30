@@ -1,13 +1,22 @@
 {% extends 'RadNet/base.html' %}
 {% load i18n %}
-{% block body_block %}
+{% load static %}
+{% block extra_head %}
 
+{% endblock %}
+{% block body_block %}
 
   <div class="inner cover">
     <h1 class="cover-heading">{% trans "RadNet"  %}</h1>
     <p class="lead">{% blocktrans %}Find how much radiation is in your air.{% endblocktrans %}</p>
     <p class="lead">
       <a href="#" class="btn btn-lg btn-default">{% trans "Learn more" %}</a>
+      <a href="#" class="btn btn-lg btn-default">{% trans "See the Data" %}</a>
+      {% if request.user.is_authenticated %}
+      <br />
+      <br />
+      <a href="/Data/AddData/" class="btn btn-lg btn-default">{% trans "Add Data" %}</a>
+      {% endif %}
     </p>
   </div>
 {% endblock %}

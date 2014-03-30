@@ -1,24 +1,51 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import ugettext as _
 
-# Create your models here.
-from django.contrib.auth.models import User
-from django.db import models
-from allauth.account.models import EmailAddress
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, related_name='profile')
+class BetaEfficiency(models.Model):
+    coefficient = models.FloatField()
 
     def __unicode__(self):
-        return "{}'s profile".format(self.user.username)
+        return str(self.coefficient)
 
-    class Meta:
-        db_table = 'user_profile'
 
-    def account_verified(self):
-        if self.user.is_authenticated:
-            result = EmailAddress.objects.filter(email=self.user.email)
-            if len(result):
-                return result[0].verified
-        return False
+class AlphaEfficiency(models.Model):
+    coefficient = models.FloatField()
 
-User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+    def __unicode__(self):
+        return str(self.coefficient)
+
+
+class Filter(models.Model):
+    filter_num = models.IntegerField(unique=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    sample_time = models.FloatField()
+    sample_volume = models.FloatField()
+    time_start = models.FloatField()
+    alpha_coeff = models.ForeignKey(AlphaEfficiency)
+    beta_coeff = models.ForeignKey(BetaEfficiency)
+
+    activityCalculated = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return str(self.filter_num) + ': ' + str(self.start_date) + ' - ' + \
+            str(self.end_date)
+
+
+
+
+class RawData(models.Model):
+    Filter = models.ForeignKey(Filter)
+    time = models.IntegerField()
+    alphaReading = models.FloatField()
+    betaReading = models.FloatField()
+    cleanFilterCount = models.FloatField()
+
+    def __unicode__(self):
+        return str(self.Filter) + ' ' + str(self.time)
+
+    def clean(self):
+        if len(str(int(self.time))) != 6:
+            raise ValidationError(_('Time must be HHMMSS format'))

@@ -9,3 +9,8 @@ def active(request, pattern):
     if re.search(pattern, request.path):
         return 'active'
     return ''
+
+
+@register.filter
+def field_type(obj):
+    return obj.__class__.__name__

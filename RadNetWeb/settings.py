@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.twitter',
     #'allauth.socialaccount.providers.stackexchange',
     #'allauth.socialaccount.providers.github',
+    'bootstrap3',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -137,3 +138,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SITE_ID = 1
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+
+BOOTSTRAP3 = {
+    'horizontal_label_class': 'col-md-3',
+    'horizontal_field_class': 'col-md-6',
+}
