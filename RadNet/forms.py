@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from RadNet.models import Filter, AlphaEfficiency, BetaEfficiency
+from RadNet.models import Filter, AlphaEfficiency, BetaEfficiency, RawData
 from django.utils.translation import ugettext as _
 
 __author__ = 'Joshua Moravec'
@@ -25,7 +25,7 @@ class FilterForm(ModelForm):
             'end_date': forms.TextInput(attrs={'class': 'datepicker'}),
             'start_date': forms.TextInput(attrs={'class': 'datepicker'}),
         }
-        exclude = ['activityCalculated']
+        exclude = ['activity_calculated']
 
     def clean(self):
         cleaned_data = super(ModelForm, self).clean()
@@ -53,3 +53,17 @@ class BetaCoeffForm(ModelForm):
 
     class Meta:
         model = BetaEfficiency
+
+
+class RawDataForm(ModelForm):
+    class Meta:
+        model = RawData
+
+    def clean(self):
+        cleaned_data = super(ModelForm, self).clean()
+        time = cleaned_data('time')
+        if len(str(int(time))) != 6:
+            msg = _('Time Start must be HHMMSS format')
+            self._errors['time'] = self.error_class([msg])
+            del cleaned_data['time']
+        return cleaned_data

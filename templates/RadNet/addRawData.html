@@ -1,0 +1,14 @@
+{% extends "RadNet/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% block title %}{% trans "Add Raw Data" %}{% endblock %}
+
+{% block content %}
+	<form action="/Data/AddRawData/" method="post"> {% csrf_token %}
+    {% bootstrap_form rawDataForm %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary"> {% trans 'Submit' %} </button>
+    {% endbuttons %}
+	</form>
+	<a href="/Data/AddRawData/CheckData">{% trans "CheckData" %}</a>
+{% endblock %}

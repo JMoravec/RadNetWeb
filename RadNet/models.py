@@ -1,6 +1,4 @@
-from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import ugettext as _
 
 
 class BetaEfficiency(models.Model):
@@ -27,25 +25,19 @@ class Filter(models.Model):
     alpha_coeff = models.ForeignKey(AlphaEfficiency)
     beta_coeff = models.ForeignKey(BetaEfficiency)
 
-    activityCalculated = models.BooleanField(default=False)
+    activity_calculated = models.BooleanField(default=False)
 
     def __unicode__(self):
         return str(self.filter_num) + ': ' + str(self.start_date) + ' - ' + \
             str(self.end_date)
 
 
-
-
 class RawData(models.Model):
-    Filter = models.ForeignKey(Filter)
+    filter = models.ForeignKey(Filter)
     time = models.IntegerField()
-    alphaReading = models.FloatField()
-    betaReading = models.FloatField()
-    cleanFilterCount = models.FloatField()
+    alpha_reading = models.FloatField()
+    beta_reading = models.FloatField()
+    clean_filter_count = models.FloatField()
 
     def __unicode__(self):
         return str(self.Filter) + ' ' + str(self.time)
-
-    def clean(self):
-        if len(str(int(self.time))) != 6:
-            raise ValidationError(_('Time must be HHMMSS format'))

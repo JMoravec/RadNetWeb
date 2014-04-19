@@ -10,7 +10,7 @@ from django.shortcuts import render
 #from calculate import fitToCurve
 #from datetime import datetime
 import sys
-from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm
+from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm, RawDataForm
 from RadNet.models import AlphaEfficiency, BetaEfficiency
 
 
@@ -75,22 +75,18 @@ def add_coefficients(request, type_id=0):
 @login_required()
 def add_raw_data(request):
     if request.method == 'POST':
-        rawDataForm = RawDataForm(request.POST)
+        raw_data_form = RawDataForm(request.POST)
         try:
-            if rawDataForm.is_valid():
-                rawDataForm.save()
+            if raw_data_form.is_valid():
+                raw_data_form.save()
                 return HttpResponseRedirect('/Data/AddRawData/')
-            else:
-                return render(request, 'Data/addRawData.html',
-                              {'rawDataForm': rawDataForm, })
         except:
-            return render(request, 'Data/addRawData.html',
-                          {'rawDataForm': rawDataForm, })
+            pass
 
-    rawDataForm = RawDataForm()
+    raw_data_form = RawDataForm()
 
-    return render(request, 'Data/addRawData.html',
-                  {'rawDataForm': rawDataForm, })
+    return render(request, 'RadNet/addRawData.html',
+                  {'rawDataForm': raw_data_form, })
 
 """
 def checkData(request, filter_id=0):
