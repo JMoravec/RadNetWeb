@@ -46,21 +46,17 @@ def add_coefficients(request, type_id=0):
     if request.method == 'POST' and str(type_id) == str(1):
         alpha_form = AlphaCoeffForm(request.POST)
         if alpha_form.is_valid():
-            try:
-                AlphaEfficiency.objects.\
-                    get(coefficient=alpha_form.cleaned_data['coefficient'])
-            except:
-                alpha_form.save()
+            #AlphaEfficiency.objects.\
+                #get(coefficient=alpha_form.cleaned_data['coefficient'])
+            alpha_form.save()
 
         beta_form = BetaCoeffForm()
     elif request.method == 'POST' and str(type_id) == str(2):
         beta_form = BetaCoeffForm(request.POST)
         if beta_form.is_valid():
-            try:
-                BetaEfficiency.objects.\
-                    get(coefficient=beta_form.cleaned_data['coefficient'])
-            except:
-                beta_form.save()
+            #BetaEfficiency.objects.\
+                #get(coefficient=beta_form.cleaned_data['coefficient'])
+            beta_form.save()
 
         alpha_form = AlphaCoeffForm()
     else:

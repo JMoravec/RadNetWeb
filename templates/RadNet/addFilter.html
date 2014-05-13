@@ -1,7 +1,7 @@
 {% extends "RadNet/base.html" %}
 {% load i18n %}
 {% load static %}
-{% load bootstrap3 %}
+{% load crispy_forms_tags %}
 {% block title %}{% trans "Add Filter" %}{% endblock %}
 {% block extra_head %}
     <script>
@@ -13,46 +13,7 @@
 
 {% block body_block %}
 
-    <form class="" action="/Data/AddFilter/" method="post">
-    {{ filter_form.non_field_errors }}
-    {% csrf_token %}
-
-    {% bootstrap_field filter_form.filter_num %} <br /><br /><br />
-    {% if filter_form.filter_num.errors %}
+    {% crispy filter_form %}
     <br />
-    {% endif %}
-    {% bootstrap_field filter_form.start_date %} <br /><br />
-        {% if filter_form.start_date.errors %}
-    <br />
-    {% endif %}
-    {% bootstrap_field filter_form.end_date %} <br /><br />
-        {% if filter_form.end_date.errors %}
-    <br />
-    {% endif %}
-    {% bootstrap_field filter_form.sample_time %} <br /><br />
-        {% if filter_form.sample_time.errors %}
-    <br />
-    {% endif %}
-    {% bootstrap_field filter_form.sample_volume %}<br /> <br />
-        {% if filter_form.sample_volume.errors %}
-    <br />
-    {% endif %}
-    {% bootstrap_field filter_form.time_start %}<br /><br />
-        {% if filter_form.time_start.errors %}
-    <br />
-    {% endif %}
-    {% bootstrap_field filter_form.alpha_coeff %}<br /><br />
-        {% if filter_form.alpha_coeff.errors %}
-    <br />
-    {% endif %}
-    {% bootstrap_field filter_form.beta_coeff %}<br /><br />
-        {% if filter_form.beta_coeff.errors %}
-    <br />
-    {% endif %}
-
-    {% buttons %}
-    <button type="submit" class="btn btn-primary"> {% trans 'Submit' %} </button>
-    {% endbuttons %}
-	</form>
     <a class="btn btn-default" href="/Data/AddCoefficients/">{% trans "Add Ceofficient Numbers" %}</a>
 {% endblock %}

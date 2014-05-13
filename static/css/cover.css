@@ -115,6 +115,10 @@ body {
   font-weight: bold;
 }
 
+.asteriskField {
+    display: none;
+}
+
 
 /*
  * Footer
