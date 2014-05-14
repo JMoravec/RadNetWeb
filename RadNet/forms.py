@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from RadNet.models import Filter, AlphaEfficiency, BetaEfficiency, RawData
 from django.utils.translation import ugettext as _
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit
+from crispy_forms.layout import Layout, Submit, Fieldset, HTML
 from crispy_forms.bootstrap import StrictButton, FormActions, FieldWithButtons
 
 __author__ = 'Joshua Moravec'
@@ -73,6 +73,7 @@ class AlphaCoeffForm(ModelForm):
 
     class Meta:
         model = AlphaEfficiency
+help_text_inline = False
 
 
 class BetaCoeffForm(ModelForm):
@@ -94,6 +95,14 @@ class BetaCoeffForm(ModelForm):
 
 
 class RawDataForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RawDataForm, self).__init__(*args, **kwargs)
+        self.fields['filter'].label = _('Filter:')
+        self.fields['time'].label = _('Time (HHMMSS):')
+        self.fields['alpha_reading'].label = _('Alpha Reading:')
+        self.fields['beta_reading'].label = _('Beta Reading:')
+        self.fields['clean_filter_count'].label = _('CFC:')
+
     class Meta:
         model = RawData
 
@@ -105,3 +114,40 @@ class RawDataForm(ModelForm):
             self._errors['time'] = self.error_class([msg])
             del cleaned_data['time']
         return cleaned_data
+
+
+class RawDataFormSetHelper(FormHelper):
+    def __init__(self, *args, **kwargs):
+        super(RawDataFormSetHelper, self).__init__(*args, **kwargs)
+        self.form_method = 'post'
+        self.form_class = 'form-inline'
+        self.field_template = 'bootstrap3/layout/inline_field.html'
+        #self.field_template = 'bootstrap/table_inline_formset.html'
+        self.layout = Layout(
+            HTML("{{ forloop.counter }}:"),
+            'time',
+            'alpha_reading',
+            'beta_reading',
+            'clean_filter_count',
+            HTML("<br /><br />"),
+        )
+
+
+class NumberOfRawData(forms.Form):
+    rows = forms.ChoiceField(choices=[(x, x) for x in range(1, 21)])
+    rows.label = _('Number of Rows:')
+    rows.required = True
+
+    filters = forms.ModelChoiceField(queryset=Filter.objects.all())
+    filters.label = _('Filter:')
+    filters.required = True
+
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.label_class = 'col-md-3'
+    helper.field_class = 'col-md-6'
+    helper.layout = Layout(
+        'filters',
+        'rows',
+        StrictButton(_('Get Data'), type='submit', css_class='btn-default')
+    )

@@ -1,5 +1,7 @@
 import traceback
+from crispy_forms.layout import Submit
 from django.contrib.auth.decorators import login_required
+from django.forms.models import formset_factory
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -10,8 +12,8 @@ from django.shortcuts import render
 #from calculate import fitToCurve
 #from datetime import datetime
 import sys
-from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm, RawDataForm
-from RadNet.models import AlphaEfficiency, BetaEfficiency
+from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm, RawDataForm, NumberOfRawData, RawDataFormSetHelper
+from RadNet.models import AlphaEfficiency, BetaEfficiency, Filter
 
 
 def home(request):
@@ -71,18 +73,24 @@ def add_coefficients(request, type_id=0):
 @login_required()
 def add_raw_data(request):
     if request.method == 'POST':
-        raw_data_form = RawDataForm(request.POST)
-        try:
-            if raw_data_form.is_valid():
-                raw_data_form.save()
-                return HttpResponseRedirect('/Data/AddRawData/')
-        except:
-            pass
-
-    raw_data_form = RawDataForm()
+        get_number_of_rows = NumberOfRawData(request.POST)
+        if get_number_of_rows.is_valid():
+            data = get_number_of_rows.cleaned_data
+            number_of_rows = int(data['rows'])
+            raw_data_form_set = formset_factory(RawDataForm, extra=number_of_rows)
+            raw_data_form = raw_data_form_set()
+            raw_data_helper = RawDataFormSetHelper()
+            raw_data_helper.add_input(Submit("submit", "Save"))
+        else:
+            raw_data_form = None
+            raw_data_helper = None
+    else:
+        get_number_of_rows = NumberOfRawData()
+        raw_data_form = None
+        raw_data_helper = None
 
     return render(request, 'RadNet/addRawData.html',
-                  {'rawDataForm': raw_data_form, })
+                  {'getRows': get_number_of_rows, 'rawDataForm': raw_data_form, 'rawHelper': raw_data_helper, })
 
 """
 def checkData(request, filter_id=0):
