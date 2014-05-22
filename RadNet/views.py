@@ -1,7 +1,7 @@
 import traceback
 from crispy_forms.layout import Submit
 from django.contrib.auth.decorators import login_required
-from django.forms.models import formset_factory
+from django.forms.models import formset_factory, modelformset_factory
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -9,11 +9,13 @@ from django.shortcuts import render_to_response
 #import traceback
 #from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
 #from calculate import fitToCurve
 #from datetime import datetime
 import sys
-from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm, RawDataForm, NumberOfRawData, RawDataFormSetHelper
-from RadNet.models import AlphaEfficiency, BetaEfficiency, Filter
+import time
+from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm, NumberOfRawData, RawDataFormSetHelper, RawDataForm
+from RadNet.models import AlphaEfficiency, BetaEfficiency, Filter, RawData
 
 
 def home(request):
@@ -77,10 +79,13 @@ def add_raw_data(request):
         if get_number_of_rows.is_valid():
             data = get_number_of_rows.cleaned_data
             number_of_rows = int(data['rows'])
-            raw_data_form_set = formset_factory(RawDataForm, extra=number_of_rows)
-            raw_data_form = raw_data_form_set()
+            filter_num = data['filters']
+            raw_data_form_set = modelformset_factory(RawData, form=RawDataForm, extra=number_of_rows)
+            test = RawData.objects.filter(filter=filter_num)
+            raw_data_form = raw_data_form_set(queryset=test, initial=[{'filter': filter_num},])
             raw_data_helper = RawDataFormSetHelper()
             raw_data_helper.add_input(Submit("submit", "Save"))
+            raw_data_helper.form_action = reverse("saveRawData", args=(filter_num.id, number_of_rows,))
         else:
             raw_data_form = None
             raw_data_helper = None
@@ -91,6 +96,34 @@ def add_raw_data(request):
 
     return render(request, 'RadNet/addRawData.html',
                   {'getRows': get_number_of_rows, 'rawDataForm': raw_data_form, 'rawHelper': raw_data_helper, })
+
+@login_required()
+def save_raw_data(request, filter_num, number_of_rows):
+    if request.method == 'POST':
+        raw_data_form_set = modelformset_factory(RawData)
+        raw_data_form = raw_data_form_set(request.POST)
+        """
+        all_saved = True
+
+        for form in forms:
+            form.filter = Filter.objects.filter(id=filter_num)
+            #form.filter_id = filter_num
+            if form.is_valid():
+                form.save()
+            else:
+                all_saved = False
+        """
+        if raw_data_form.is_valid():
+            raw_data_form.save()
+        else:
+            raw_data_helper = RawDataFormSetHelper()
+            raw_data_helper.add_input(Submit("submit", "Save"))
+            raw_data_helper.form_action = reverse("saveRawData", args=(filter_num, number_of_rows,))
+            return render(request, 'RadNet/addRawDataErrors.html',
+                          {'rawDataForm': raw_data_form, 'rawHelper': raw_data_helper, })
+    return HttpResponseRedirect('/Data/AddRawData')
+
+
 
 """
 def checkData(request, filter_id=0):

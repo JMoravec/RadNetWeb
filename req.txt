@@ -1,4 +1,4 @@
-Django==1.6.4
+Django==1.6.5
 django-allauth==0.16.1
 django-crispy-forms=1.4.0
 numpy==1.8.1

@@ -98,6 +98,7 @@ class RawDataForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(RawDataForm, self).__init__(*args, **kwargs)
         self.fields['filter'].label = _('Filter:')
+        self.fields['filter'].widget = forms.HiddenInput()
         self.fields['time'].label = _('Time (HHMMSS):')
         self.fields['alpha_reading'].label = _('Alpha Reading:')
         self.fields['beta_reading'].label = _('Beta Reading:')
@@ -122,9 +123,13 @@ class RawDataFormSetHelper(FormHelper):
         self.form_method = 'post'
         self.form_class = 'form-inline'
         self.field_template = 'bootstrap3/layout/inline_field.html'
+        self.error_text_inline = True
+        self.form_action = 'Data/Test'
         #self.field_template = 'bootstrap/table_inline_formset.html'
         self.layout = Layout(
             HTML("{{ forloop.counter }}:"),
+            'filter',
+            #HTML("{{ rawDataForm.errors }}"),
             'time',
             'alpha_reading',
             'beta_reading',

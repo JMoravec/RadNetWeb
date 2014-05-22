@@ -11,4 +11,5 @@ urlpatterns = patterns('',
                        url(r'^AddCoefficients/$', views.add_coefficients, name='addCoeff'),
                        url(r'^AddCoefficients/(?P<type_id>\d+)/$', views.add_coefficients),
                        url(r'^AddRawData/$', views.add_raw_data, name='addRawData'),
+                       url(r'^AddRawData/Save/(?P<filter_num>\d+)(?P<number_of_rows>\d+)/$', views.save_raw_data, name='saveRawData'),
                        )
