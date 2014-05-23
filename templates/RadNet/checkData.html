@@ -1,0 +1,76 @@
+{% extends "RadNet/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{% trans "Check Data" %}{% endblock %}
+
+{% block body_block %}
+    {% crispy getFilterForm %}
+	{%if mainFilter %}
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans "Filter Number" %}</th>
+                    <th>{{ mainFilter.filter_num }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>{% trans "Start Date" %}</th>
+                    <th>{{ mainFilter.start_date }}</th>
+                </tr>
+                <tr>
+                    <th>{% trans "End Date" %}</th>
+                    <th>{{ mainFilter.end_date }}</th>
+                </tr>
+                <tr>
+                    <th>{% trans "Sample Time" %}</th>
+                    <th>{{ mainFilter.sample_time }}</th>
+                </tr>
+                <tr>
+                    <th>{% trans "Sample Volume" %}</th>
+                    <th>{{ mainFilter.sample_volume }}</th>
+                </tr>
+                <tr>
+                    <th>{% trans "Time Start" %}</th>
+                    <th>{{ mainFilter.time_start }}</th>
+                </tr>
+                <tr>
+                    <th>{% trans "Alpha Coefficient" %}</th>
+                    <th>{{ mainFilter.alpha_coeff }}</th>
+                </tr>
+                <tr>
+                    <th>{% trans "Beta Coefficient" %}</th>
+                    <th>{{ mainFilter.beta_coeff }}</th>
+                </tr>
+            </tbody>
+        </table>
+        <br/> <br/>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>{% trans "Time Taken" %}</th>
+                    <th>{% trans "Alpha Beta Reading" %}</th>
+                    <th>{% trans "Alpha Reading" %}</th>
+                    <th>{% trans "Clean Filter Count" %}</th>
+                    <th>{% trans "Time from Filter Removed" %}</th>
+                    <th>{% trans "Alpha Activity" %}</th>
+                    <th>{% trans "Beta Activity" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for data in activityData %}
+                <tr>
+                    <th>{{ data.raw_data.time }}</th>
+                    <th>{{ data.raw_data.beta_reading }}</th>
+                    <th>{{ data.raw_data.alpha_reading }}</th>
+                    <th>{{ data.raw_data.clean_filter_count }}</th>
+                    <th>{{ data.delta_t|floatformat:3 }}</th>
+                    <th>{{ data.alpha_activity|floatformat:3 }}</th>
+                    <th>{{ data.beta_activity|floatformat:3 }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+	{% endif %}
+{% endblock %}

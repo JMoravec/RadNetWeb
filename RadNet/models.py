@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext as _
+from RadNet.time_to_hours import time_to_hours
 
 
 class BetaEfficiency(models.Model):
@@ -38,7 +39,7 @@ class RawData(models.Model):
     filter = models.ForeignKey(Filter)
     time = models.IntegerField(_("Time (HHMMSS)"))
     alpha_reading = models.FloatField(_("Alpha Reading"))
-    beta_reading = models.FloatField(_("Beta Reading"))
+    beta_reading = models.FloatField(_("Beta/Alpha Reading"))
     clean_filter_count = models.FloatField(_("Clean Filter Count"))
 
     def __unicode__(self):
@@ -64,3 +65,27 @@ class RawData(models.Model):
         if len(str(int(self.time))) != 6:
             msg = _('Time Start must be HHMMSS format')
             raise ValidationError(msg)
+
+
+class Activity(models.Model):
+    filter = models.ForeignKey(Filter)
+    raw_data = models.ForeignKey(RawData)
+    delta_t = models.FloatField()
+    alpha_activity = models.FloatField()
+    beta_activity = models.FloatField()
+
+    net_alpha_beta = models.FloatField()
+    net_beta = models.FloatField()
+
+    def fill_data(self):
+        start_time = time_to_hours(str(self.filter.time_start))
+        raw_time = time_to_hours(str(self.raw_data.time))
+        #assumes raw time is on the next day here
+        if raw_time < start_time:
+            raw_time += 24.0
+
+        self.delta_t = raw_time - start_time
+        self.net_alpha_beta = self.raw_data.beta_reading - self.raw_data.clean_filter_count
+        self.net_beta = self.net_alpha_beta - self.raw_data.alpha_reading
+        self.alpha_activity = self.raw_data.alpha_reading * self.filter.alpha_coeff.coefficient
+        self.beta_activity = self.net_beta * self.filter.beta_coeff.coefficient

@@ -14,8 +14,9 @@ from django.core.urlresolvers import reverse
 #from datetime import datetime
 import sys
 import time
-from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm, NumberOfRawData, RawDataFormSetHelper, RawDataForm
-from RadNet.models import AlphaEfficiency, BetaEfficiency, Filter, RawData
+from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm, NumberOfRawData, RawDataFormSetHelper, RawDataForm, \
+    GetFilterForm
+from RadNet.models import AlphaEfficiency, BetaEfficiency, Filter, RawData, Activity
 
 
 def home(request):
@@ -72,7 +73,7 @@ def add_coefficients(request, type_id=0):
                    'betaForm': beta_form, })
 
 
-@login_required()
+@login_required
 def add_raw_data(request):
     if request.method == 'POST':
         get_number_of_rows = NumberOfRawData(request.POST)
@@ -97,24 +98,18 @@ def add_raw_data(request):
     return render(request, 'RadNet/addRawData.html',
                   {'getRows': get_number_of_rows, 'rawDataForm': raw_data_form, 'rawHelper': raw_data_helper, })
 
-@login_required()
+@login_required
 def save_raw_data(request, filter_num, number_of_rows):
     if request.method == 'POST':
         raw_data_form_set = modelformset_factory(RawData)
         raw_data_form = raw_data_form_set(request.POST)
-        """
-        all_saved = True
-
-        for form in forms:
-            form.filter = Filter.objects.filter(id=filter_num)
-            #form.filter_id = filter_num
-            if form.is_valid():
-                form.save()
-            else:
-                all_saved = False
-        """
         if raw_data_form.is_valid():
             raw_data_form.save()
+            #update the filter so activity will be calculated again
+            update_filter = Filter.objects.get(id=filter_num)
+            update_filter.activity_calculated = False
+            update_filter.save()
+            return HttpResponseRedirect('/Data/CheckData/' + str(filter_num))
         else:
             raw_data_helper = RawDataFormSetHelper()
             raw_data_helper.add_input(Submit("submit", "Save"))
@@ -124,68 +119,43 @@ def save_raw_data(request, filter_num, number_of_rows):
     return HttpResponseRedirect('/Data/AddRawData')
 
 
+@login_required
+def check_data(request, filter_id=0):
+    if request.method == 'POST':
+        get_filter_form = GetFilterForm(request.POST)
+        if get_filter_form.is_valid():
+            selection = get_filter_form.cleaned_data['filterID']
+            return HttpResponseRedirect('/Data/CheckData/' + str(selection.id))
+        else:
+            main_filter = None
+            activity_data = None
+    elif filter_id != 0:
+        main_filter = Filter.objects.get(id=filter_id)
+        if not main_filter.activity_calculated:
+            raw_data = RawData.objects.filter(filter=main_filter)
+            raw_data = raw_data.order_by('time')
+            for data in raw_data:
+                if Activity.objects.filter(raw_data=data).count() == 0:
+                    activity = Activity()
+                    activity.filter = main_filter
+                    activity.raw_data = data
+                    activity.fill_data()
+                    activity.save()
+            main_filter.activity_calculated = True
+            main_filter.save()
+        activity_data = Activity.objects.filter(filter=main_filter).order_by('delta_t')
+        get_filter_form = GetFilterForm()
+    else:
+        get_filter_form = GetFilterForm()
+        main_filter = None
+        activity_data = None
+    context = {'getFilterForm': get_filter_form,
+               'filter_id': filter_id,
+               'mainFilter': main_filter,
+               'activityData': activity_data, }
+    return render(request, 'RadNet/checkData.html', context)
 
 """
-def checkData(request, filter_id=0):
-    if (request.method == 'POST' and filter_id == 0):
-        getFilterForm = GetFilterForm(request.POST)
-        if getFilterForm.is_valid():
-            selection = getFilterForm.cleaned_data['filterID']
-            return HttpResponseRedirect('/Data/AddRawData/CheckData/' +
-                                        str(selection.id) + '/')
-    elif (request.method == 'POST' and filter_id != 0):
-        mainFilter = Filter.objects.get(id=filter_id)
-        if not mainFilter.activityCalculated:
-            rawData = RawData.objects.filter(Filter=filter_id)
-            rawData = rawData.order_by('time')
-            for data in rawData:
-                activity = Activity()
-                activity.Filter = mainFilter
-                activity.RawData = data
-                activity.fillData()
-                activity.save()
-            mainFilter.activityCalculated = True
-            mainFilter.save()
-            return HttpResponseRedirect('/Data/FitToCurve/' +
-                                        str(filter_id) + '/')
-        else:
-            HttpResponseRedirect('/Data/ViewData/' + str(filter_id) + '/')
-    elif filter_id != 0:
-        try:
-            mainFilter = Filter.objects.get(id=filter_id)
-            if mainFilter.activityCalculated:
-                return HttpResponseRedirect('/Data/ViewData/' +
-                                            str(filter_id) + '/')
-            rawData = RawData.objects.filter(Filter=filter_id)
-            rawData = rawData.order_by('time')
-            activityData = []
-            for data in rawData:
-                activity = Activity()
-                activity.Filter = mainFilter
-                activity.RawData = data
-                activity.fillData()
-                activityData.append(activity)
-            getFilterForm = None
-        except:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value,
-                                               exc_traceback)
-            print ''.join('!! ' + line for line in lines)
-            getFilterForm = GetFilterForm()
-            filter_id = 0
-            mainFilter = None
-            activityData = None
-    else:
-        getFilterForm = GetFilterForm()
-        mainFilter = None
-        activityData = None
-    context = {'getFilterForm': getFilterForm,
-               'filter_id': filter_id,
-               'mainFilter': mainFilter,
-               'activityData': activityData, }
-    return render(request, 'Data/checkData.html', context)
-
-
 def viewData(request, filter_id=0):
     if request.method == 'POST':
         getFilterForm = GetFilterForm(request.POST)

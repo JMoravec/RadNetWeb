@@ -124,8 +124,6 @@ class RawDataFormSetHelper(FormHelper):
         self.form_class = 'form-inline'
         self.field_template = 'bootstrap3/layout/inline_field.html'
         self.error_text_inline = True
-        self.form_action = 'Data/Test'
-        #self.field_template = 'bootstrap/table_inline_formset.html'
         self.layout = Layout(
             HTML("{{ forloop.counter }}:"),
             'filter',
@@ -154,5 +152,20 @@ class NumberOfRawData(forms.Form):
     helper.layout = Layout(
         'filters',
         'rows',
+        StrictButton(_('Get Data'), type='submit', css_class='btn-default')
+    )
+
+
+class GetFilterForm(forms.Form):
+    filterID = forms.ModelChoiceField(queryset=Filter.objects.all(), empty_label=None)
+    filterID.label = _('Filter')
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_class = 'form-inline'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_action = ''
+    helper.layout = Layout(
+        'filterID',
         StrictButton(_('Get Data'), type='submit', css_class='btn-default')
     )
