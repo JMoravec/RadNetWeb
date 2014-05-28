@@ -137,8 +137,8 @@ class RawDataFormSetHelper(FormHelper):
 
 
 class NumberOfRawData(forms.Form):
-    rows = forms.ChoiceField(choices=[(x, x) for x in range(1, 21)])
-    rows.label = _('Number of Rows:')
+    rows = forms.ChoiceField(choices=[(x, x) for x in range(0, 21)])
+    rows.label = _('Number of New Rows:')
     rows.required = True
 
     filters = forms.ModelChoiceField(queryset=Filter.objects.all())

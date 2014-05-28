@@ -14,9 +14,10 @@ from django.core.urlresolvers import reverse
 #from datetime import datetime
 import sys
 import time
+from RadNet.fit_to_curve import fit_to_curve
 from RadNet.forms import FilterForm, AlphaCoeffForm, BetaCoeffForm, NumberOfRawData, RawDataFormSetHelper, RawDataForm, \
     GetFilterForm
-from RadNet.models import AlphaEfficiency, BetaEfficiency, Filter, RawData, Activity
+from RadNet.models import AlphaEfficiency, BetaEfficiency, Filter, RawData, Activity, AlphaCurve, BetaCurve
 
 
 def home(request):
@@ -121,6 +122,7 @@ def save_raw_data(request, filter_num, number_of_rows):
 
 @login_required
 def check_data(request, filter_id=0):
+    #if form is used on the page to select the filter
     if request.method == 'POST':
         get_filter_form = GetFilterForm(request.POST)
         if get_filter_form.is_valid():
@@ -129,8 +131,12 @@ def check_data(request, filter_id=0):
         else:
             main_filter = None
             activity_data = None
+            alpha_curve = None
+            beta_curve = None
+    #if the filter was specified in url
     elif filter_id != 0:
         main_filter = Filter.objects.get(id=filter_id)
+        #check if the activity needs to be calculated
         if not main_filter.activity_calculated:
             raw_data = RawData.objects.filter(filter=main_filter)
             raw_data = raw_data.order_by('time')
@@ -143,16 +149,38 @@ def check_data(request, filter_id=0):
                     activity.save()
             main_filter.activity_calculated = True
             main_filter.save()
+
+            #update the Alpha and Beta curves
+            #first see if the objects were already calculated and delete them
+            try:
+                alpha_curve = AlphaCurve.objects.get(filter=main_filter)
+                alpha_curve.delete()
+            except:
+                pass
+            try:
+                beta_curve = BetaCurve.objects.get(filter=main_filter)
+                beta_curve.delete()
+            except:
+                pass
+
+            fit_to_curve(main_filter.id)
+
         activity_data = Activity.objects.filter(filter=main_filter).order_by('delta_t')
         get_filter_form = GetFilterForm()
+        alpha_curve = AlphaCurve.objects.get(filter=main_filter)
+        beta_curve = BetaCurve.objects.get(filter=main_filter)
     else:
         get_filter_form = GetFilterForm()
         main_filter = None
         activity_data = None
+        alpha_curve = None
+        beta_curve = None
     context = {'getFilterForm': get_filter_form,
                'filter_id': filter_id,
                'mainFilter': main_filter,
-               'activityData': activity_data, }
+               'activityData': activity_data,
+               'alphaCurve': alpha_curve,
+               'betaCurve': beta_curve}
     return render(request, 'RadNet/checkData.html', context)
 
 """
@@ -182,24 +210,30 @@ def viewData(request, filter_id=0):
                'activity': activity,
                'mainFilter': mainFilter, }
     return render(request, 'Data/viewData.html', context)
+"""
 
 
-def fitCurve(request, filter_id=0):
+"""
+@login_required
+def fit_to_curve(request, filter_id=0):
+    if filter_id == 0:
+        return HttpResponseRedirect('/')
     try:
-        alphaCurve = AlphaCurve.objects.get(Filter=filter_id)
-        betaCurve = BetaCurve.objects.get(Filter=filter_id)
-        context = {'alphaCurve': alphaCurve,
-                   'betaCurve': betaCurve, }
-        return render(request, 'Data/fitCurve.html', context)
+        alpha_curve = AlphaCurve.objects.get(filter=filter_id)
+        beta_curve = BetaCurve.objects.get(filter=filter_id)
+        context = {'alphaCurve': alpha_curve,
+                   'betaCurve': beta_curve, }
+        return render(request, 'RadNet/fitCurve.html', context)
     except:
-        if filter_id == 0:
-            return HttpResponseRedirect('/Data/')
-        else:
-            fitToCurve(filter_id)
-            return HttpResponseRedirect('/Data/FitToCurve/' +
-                                        str(filter_id) + '/')
+        fit_to_curve(filter_id)
+        alpha_curve = AlphaCurve.objects.get(filter=filter_id)
+        beta_curve = BetaCurve.objects.get(filter=filter_id)
+        context = {'alphaCurve': alpha_curve,
+                   'betaCurve': beta_curve, }
+        return render(request, 'RadNet/fitCurve.html', context)
+"""
 
-
+"""
 def uploadData(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)

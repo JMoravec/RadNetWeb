@@ -72,5 +72,35 @@
             {% endfor %}
             </tbody>
         </table>
+        <br />
 	{% endif %}
+    {% if alphaCurve and betaCurve %}
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>{% trans "1st Coefficient Number" %}</th>
+                    <th>{% trans "1st Lambda Number" %}</th>
+                    <th>{% trans "2nd Coefficient Number" %}</th>
+                    <th>{% trans "2nd Lambda Number" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>{% trans "Alpha Data:" %}</th>
+                    <th>{{ alphaCurve.alpha_1 }}</th>
+                    <th>{{ alphaCurve.alpha_1_lambda }}</th>
+                    <th>{{ alphaCurve.alpha_2 }}</th>
+                    <th>{{ alphaCurve.alpha_2_lambda }}</th>
+                </tr>
+                <tr>
+                    <th>{% trans "Beta Data:"%}</th>
+                    <th>{{ betaCurve.beta_1 }}</th>
+                    <th>{{ betaCurve.beta_1_lambda }}</th>
+                    <th>{{ betaCurve.beta_2 }}</th>
+                    <th>{{ betaCurve.beta_2_lambda }}</th>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}

@@ -89,3 +89,29 @@ class Activity(models.Model):
         self.net_beta = self.net_alpha_beta - self.raw_data.alpha_reading
         self.alpha_activity = self.raw_data.alpha_reading * self.filter.alpha_coeff.coefficient
         self.beta_activity = self.net_beta * self.filter.beta_coeff.coefficient
+
+
+class AlphaCurve(models.Model):
+    filter = models.ForeignKey(Filter)
+    alpha_1 = models.FloatField()
+    alpha_1_lambda = models.FloatField()
+    alpha_2 = models.FloatField()
+    alpha_2_lambda = models.FloatField()
+
+    def __unicode__(self):
+        return str(self.filter) + '\n' + str(self.alpha_1) + '\n' + \
+            str(self.alpha_1_lambda) + '\n' + str(self.alpha_2) + '\n' + \
+            str(self.alpha_2_lambda)
+
+
+class BetaCurve(models.Model):
+    filter = models.ForeignKey(Filter)
+    beta_1 = models.FloatField()
+    beta_1_lambda = models.FloatField()
+    beta_2 = models.FloatField()
+    beta_2_lambda = models.FloatField()
+
+    def __unicode__(self):
+        return str(self.filter) + '\n' + str(self.beta_1) + \
+            '\n' + str(self.beta_1_lambda) + '\n' + str(self.beta_2) + \
+            '\n' + str(self.beta_2_lambda)
